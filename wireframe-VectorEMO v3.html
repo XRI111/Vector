@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vector - Smarter Position Sizing for Serious Traders</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0a0a0f;
+            color: #ffffff;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(10, 10, 15, 0.95);
+            backdrop-filter: blur(10px);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(59, 130, 246, 0.1);
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+        }
+
+        .logo {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            padding: 12px 24px;
+            font-weight: 700;
+            font-size: 18px;
+            text-transform: lowercase;
+            border-radius: 6px;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 40px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: #a1a1aa;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #3b82f6;
+        }
+
+        .cta-primary {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .cta-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
+        }
+
+        .cta-secondary {
+            background: transparent;
+            color: #3b82f6;
+            padding: 12px 24px;
+            border: 2px solid #3b82f6;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            margin-left: 16px;
+        }
+
+        .cta-secondary:hover {
+            background: #3b82f6;
+            color: white;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #0a0a0f 100%);
+            padding: 140px 0 80px;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><g fill="%23ffffff" fill-opacity="0.02"><rect width="1" height="1"/></g></g></svg>');
+            opacity: 0.3;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 24px;
+            background: linear-gradient(135deg, #ffffff 0%, #a1a1aa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: #a1a1aa;
+            margin-bottom: 40px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Problem Section */
+        .problem-section {
+            padding: 80px 0;
+            background: #111111;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 60px;
+            background: linear-gradient(135deg, #ffffff 0%, #a1a1aa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .problem-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 40px;
+            margin-bottom: 60px;
+        }
+
+        @media (max-width: 768px) {
+            .problem-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .problem-card {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(29, 78, 216, 0.05) 100%);
+            border: 1px solid rgba(59, 130, 246, 0.1);
+            border-radius: 12px;
+            padding: 32px;
+            transition: transform 0.3s ease;
+        }
+
+        .problem-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(59, 130, 246, 0.3);
+        }
+
+        .problem-card h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #3b82f6;
+        }
+
+        .problem-card p {
+            color: #a1a1aa;
+            line-height: 1.7;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 80px 0;
+            background: #0a0a0f;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+        }
+
+        .feature-card {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            border-radius: 20px;
+            margin: 0 auto 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .feature-card p {
+            color: #a1a1aa;
+            line-height: 1.7;
+        }
+
+        /* Stats Section */
+        .stats {
+            padding: 80px 0;
+            background: linear-gradient(135deg, #1a1a2e 0%, #0a0a0f 100%);
+            text-align: center;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-top: 60px;
+        }
+
+        .stat-item {
+            padding: 20px;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #3b82f6;
+            display: block;
+        }
+
+        .stat-label {
+            color: #a1a1aa;
+            font-weight: 500;
+            margin-top: 8px;
+        }
+
+        /* Testimonials */
+        .testimonials {
+            padding: 80px 0;
+            background: #111111;
+        }
+
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
+            margin-top: 60px;
+        }
+
+        .testimonial {
+            background: rgba(59, 130, 246, 0.03);
+            border: 1px solid rgba(59, 130, 246, 0.1);
+            border-radius: 12px;
+            padding: 32px;
+        }
+
+        .testimonial-text {
+            font-style: italic;
+            color: #e5e5e7;
+            margin-bottom: 24px;
+            line-height: 1.7;
+        }
+
+        .testimonial-author {
+            font-weight: 600;
+            color: #3b82f6;
+        }
+
+        .testimonial-role {
+            color: #a1a1aa;
+            font-size: 0.9rem;
+        }
+
+        /* FAQ Section */
+        .faq {
+            padding: 80px 0;
+            background: #0a0a0f;
+        }
+
+        .faq-item {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            margin-bottom: 16px;
+            overflow: hidden;
+        }
+
+        .faq-question {
+            padding: 24px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            text-align: left;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .faq-answer {
+            padding: 0 24px 24px;
+            color: #a1a1aa;
+            line-height: 1.7;
+            display: none;
+        }
+
+        .faq-item.active .faq-answer {
+            display: block;
+        }
+
+        /* CTA Section */
+        .final-cta {
+            padding: 100px 0;
+            background: linear-gradient(135deg, #1a1a2e 0%, #0a0a0f 100%);
+            text-align: center;
+        }
+
+        .final-cta h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 24px;
+        }
+
+        .final-cta p {
+            font-size: 1.25rem;
+            color: #a1a1aa;
+            margin-bottom: 40px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Footer */
+        .footer {
+            background: #0a0a0f;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 40px 0;
+            text-align: center;
+        }
+
+        .footer p {
+            color: #a1a1aa;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .nav {
+                padding: 20px;
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .nav-links {
+                gap: 20px;
+            }
+            
+            .cta-secondary {
+                margin-left: 0;
+                margin-top: 16px;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+        }
+
+        /* Sticky CTA */
+        .sticky-cta {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            padding: 16px 24px;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .sticky-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(59, 130, 246, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav">
+            <div class="logo">vector</div>
+            <ul class="nav-links">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#pricing">Pricing</a></li>
+                <li><a href="#about">About</a></li>
+            </ul>
+            <div>
+                <a href="#demo" class="cta-secondary">Watch Demo</a>
+                <a href="#access" class="cta-primary">Get Instant Access</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Why Are You Still Using Tools<br>That Think Every Trade Is The Same?</h1>
+                <p>What if your position calculator actually tried to make you money? Most tools just ask: "How much can you lose?" <br>Vector asks: "How much can you make?"</p>
+                <div>
+                    <a href="#access" class="cta-primary">Get Instant Access</a>
+                    <a href="#demo" class="cta-secondary">Watch Demo</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Problem Section -->
+    <section class="problem-section">
+        <div class="container">
+            <h2 class="section-title">Most Tools Keep You Safe. Vector Helps You Grow.</h2>
+            <div class="problem-grid">
+                <div class="problem-card">
+                    <h3>Conviction-Weighted Sizing</h3>
+                    <p>Input how strong your trade conviction is. Vector balances it against your risk profile, so you press when it's worth it and pull back when it's not.</p>
+                </div>
+                <div class="problem-card">
+                    <h3>Market-Aware Calculations</h3>
+                    <p>It doesn't just look at volatility—it understands the stock's behavior and tailors sizing accordingly.</p>
+                </div>
+                <div class="problem-card">
+                    <h3>Real-World Precision</h3>
+                    <p>Instead of rounding or guessing, Vector gives you the actual optimal share count, even if it's 7,327, not 5,000.</p>
+                </div>
+                <div class="problem-card">
+                    <h3>Dynamic Feedback Loop</h3>
+                    <p>Your sizing decisions evolve with your strategy, account size, and market conditions.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="container">
+            <h2 class="section-title">Precision Position Sizing for Serious Traders</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">📈</div>
+                    <h3>Morning Intelligence Integration</h3>
+                    <p>Start your day with an edge. See key headlines, analyst upgrades, earnings, and market movers that actually affect your watchlist.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3>Conviction-Based Sizing</h3>
+                    <p>Your high conviction trades get sized bigger than your lower conviction trades. Finally, sizing that works for your actual strategy.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Real-Time Calculations</h3>
+                    <p>Vector's reward analysis identifies which stocks deserve more capital. Those small differences compound over hundreds of trades.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats">
+        <div class="container">
+            <h2 class="section-title">What Do You Think Happens When Pro Traders Get Tired of Losing Money to Bad Position Sizing?</h2>
+            <p style="font-size: 1.2rem; color: #a1a1aa; max-width: 800px; margin: 0 auto;">Vector wasn't some startup's bright idea.<br>It was born inside Apex Capital because even billion-dollar funds were using outdated sizing methods that left profits on the table.</p>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <span class="stat-number">37%</span>
+                    <div class="stat-label">Profit Boost at Apex Capital</div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">10,000+</span>
+                    <div class="stat-label">Precise Share Calculations</div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">100%</span>
+                    <div class="stat-label">Real Trader Tested</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="testimonials">
+        <div class="container">
+            <h2 class="section-title">What Serious Traders Are Saying</h2>
+            <div class="testimonial-grid">
+                <div class="testimonial">
+                    <div class="testimonial-text">"I thought I was so sophisticated because I used ATR calculations. Turns out I was still thinking like an amateur. Vector forced me to size like the pros actually do. Based on conviction, not just fear."</div>
+                    <div class="testimonial-author">David Chen</div>
+                    <div class="testimonial-role">Full-Time Trader</div>
+                </div>
+                <div class="testimonial">
+                    <div class="testimonial-text">"My spreadsheet treated every trade identically. High conviction, low conviction...same 2% risk. Vector sizes based on opportunity, not just safety. Now my best ideas get the capital they deserve."</div>
+                    <div class="testimonial-author">Marc Kohn</div>
+                    <div class="testimonial-role">Full-Time Trader, 14 months using Vector</div>
+                </div>
+                <div class="testimonial">
+                    <div class="testimonial-text">"Used to wing it with round numbers. 5K here, 3K there. Vector forced me to think like the big boys. My win rate wasn't the biggest improvement, but my profit factor? That's where I saw the real difference."</div>
+                    <div class="testimonial-author">Marcus Kaminski</div>
+                    <div class="testimonial-role">Part Time Trader, 18 months using Vector</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq">
+        <div class="container">
+            <h2 class="section-title">Frequently Asked Questions</h2>
+            <div class="faq-list">
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        Is this another get rich quick scheme?
+                        <span>+</span>
+                    </button>
+                    <div class="faq-answer">
+                        Here's what Vector doesn't promise: 1000% returns, secret strategies, or guaranteed profits. Here's what it does: mathematically optimizes your position sizing backed by actual successful trader data. If you're looking for magic bullets, keep scrolling. If you want better sizing decisions, you're in the right place.
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        What if I'm not good enough at trading to use this?
+                        <span>+</span>
+                    </button>
+                    <div class="faq-answer">
+                        Let us ask you this: Are you good enough at trading to keep using tools that cap your winners? Vector doesn't make you a better stock picker- it makes your good picks more profitable and your bad picks less damaging. The VectorSize algorithm handles the math and insights. You handle the strategy.
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        Do you want access to my brokerage account?
+                        <span>+</span>
+                    </button>
+                    <div class="faq-answer">
+                        We don't want your account, your passwords, or your trading data. Vector calculates position sizes. You execute trades through your existing platform. Your money stays where it is. Your privacy stays intact. We're not trying to be your broker, just your edge.
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        I don't want software making my trading decisions.
+                        <span>+</span>
+                    </button>
+                    <div class="faq-answer">
+                        Good news: Vector doesn't. You’re in control. You pick the stocks. You decide when to enter. You execute the trades.<br>Vector is here to be your daily research copilot and your position sizing expert. Just fire up Vector to optimize your position size based on reward potential. It's an analytical engine decision influencer, not a decision maker.
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        Does this work if I'm not a day trader or just starting out?
+                        <span>+</span>
+                    </button>
+                    <div class="faq-answer">
+                        Why wouldn't it? Whether you hold for 5 minutes or 5 weeks, position sizing determines your profit and loss. Vector works for day traders, swing traders, position traders... anyone who wants to size positions intelligently instead of guessing.
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        My account is too small for sophisticated tools.
+                        <span>+</span>
+                    </button>
+                    <div class="faq-answer">
+                        Actually, that's backwards. Small accounts need better position sizing more than large ones. One oversized trade can wipe you out. Vector helps you scale appropriately so you can grow your account instead of blowing it up. Size matters most when you have the least room for error.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final CTA -->
+    <section class="final-cta" id="access">
+        <div class="container">
+            <h2>Why Are You Sizing Your Best Trades Like Your Worst Ones?</h2>
+            <p>You wouldn't bet the same amount on a coin flip as you would on a sure thing. So why does your position calculator treat every trade exactly the same?</p>
+            <div>
+                <a href="#" class="cta-primary">Get Instant Access</a>
+                <a href="#demo" class="cta-secondary">Watch Demo</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 Vector. All rights reserved. Built for traders who want to trade smarter, not just safer.</p>
+        </div>
+    </footer>
+
+    <!-- Sticky CTA -->
+    <a href="#access" class="sticky-cta">Get Vector Now</a>
+
+    <script>
+        function toggleFaq(button) {
+            const faqItem = button.parentElement;
+            const isActive = faqItem.classList.contains('active');
+            
+            // Close all FAQ items
+            document.querySelectorAll('.faq-item').forEach(item => {
+                item.classList.remove('active');
+                item.querySelector('.faq-question span').textContent = '+';
+            });
+            
+            // Open clicked item if it wasn't active
+            if (!isActive) {
+                faqItem.classList.add('active');
+                button.querySelector('span').textContent = '−';
+            }
+        }
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Header background on scroll
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('.header');
+            if (window.scrollY > 100) {
+                header.style.background = 'rgba(10, 10, 15, 0.98)';
+            } else {
+                header.style.background = 'rgba(10, 10, 15, 0.95)';
+            }
+        });
+    </script>
+</body>
+</html>
